@@ -24,15 +24,9 @@ public class DailySummary {
     private DailySummaryId id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @MapsId("userId")
+    @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "recordkey", referencedColumnName = "recordkey", insertable = false, updatable = false),
-        @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    })
-    private Source source;
 
     @Column(name = "steps")
     private Integer steps;

@@ -25,13 +25,9 @@ public class StepsRecord {
     private Long stepRecordId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
     @JoinColumns({
         @JoinColumn(name = "recordkey", referencedColumnName = "recordkey", nullable = false),
-        @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, insertable = false, updatable = false)
+        @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     })
     private Source source;
 

@@ -40,7 +40,8 @@ CREATE TABLE daily_summary (
     calories DOUBLE,
     distance DOUBLE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id, recordkey, date)
+    PRIMARY KEY (user_id, recordkey, date),
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
 CREATE TABLE monthly_summary (
@@ -51,5 +52,6 @@ CREATE TABLE monthly_summary (
     calories DOUBLE,
     distance DOUBLE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id, recordkey, date)
+    PRIMARY KEY (user_id, recordkey, date),
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
 );

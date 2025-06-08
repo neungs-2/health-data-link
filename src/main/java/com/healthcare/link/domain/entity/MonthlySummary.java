@@ -24,11 +24,9 @@ public class MonthlySummary {
     private MonthlySummaryId id;
 
     @ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "recordkey", referencedColumnName = "recordkey", insertable = false, updatable = false),
-        @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    })
-    private Source source;
+    @MapsId("userId")
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "steps")
     private Integer steps;
