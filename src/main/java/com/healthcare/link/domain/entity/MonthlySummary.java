@@ -1,24 +1,34 @@
 package com.healthcare.link.domain.entity;
 
 import com.healthcare.link.domain.vo.MonthlySummaryId;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "monthly_summary")
 @EntityListeners(AuditingEntityListener.class)
-@Data
 @Builder
+@Getter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class MonthlySummary {
+public class MonthlySummary implements Persistable<MonthlySummaryId> {
 
     @EmbeddedId
     private MonthlySummaryId id;
@@ -28,16 +38,20 @@ public class MonthlySummary {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "steps")
+    private String timezone;
+
     private Integer steps;
 
-    @Column(name = "calories")
     private Double calories;
 
-    @Column(name = "distance")
     private Double distance;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @Override
+    public boolean isNew() {
+        return createdAt == null; // EmbeddedId 직접 주입하므로 createAt으로 판단
+    }
 }

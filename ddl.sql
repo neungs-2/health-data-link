@@ -25,11 +25,11 @@ CREATE TABLE steps_record (
     steps INT,
     distance DOUBLE,
     calories DOUBLE,
-    period_from TIMESTAMP,
-    period_to TIMESTAMP,
+    period_from TIMESTAMP NOT NULL,
+    period_to TIMESTAMP NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES user(user_id),
-    FOREIGN KEY (recordkey, user_id) REFERENCES source(recordkey, user_id)
+    FOREIGN KEY (recordkey, user_id) REFERENCES source(recordkey, user_id),
+    UNIQUE KEY uq_steps_record_user_record_period (user_id, recordkey, period_from, period_to)
 );
 
 CREATE TABLE daily_summary (

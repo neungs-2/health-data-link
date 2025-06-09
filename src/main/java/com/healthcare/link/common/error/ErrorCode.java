@@ -11,6 +11,9 @@ public enum ErrorCode {
     DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "E004", "데이터를 찾을 수 없습니다."),
     NOT_EXIST_USER(HttpStatus.NOT_FOUND, "E005", "존재하지 않는 유저입니다."),
     UNSUPPORTED_DATE_FORMAT(HttpStatus.BAD_REQUEST, "E006", "지원하지 않는 날짜 형식입니다."),
+    INVALID_STEPS(HttpStatus.BAD_REQUEST, "E008", "유효하지 않은 걸음 수입니다."),
+    MEASUREMENT_UNIT_MISMATCH(HttpStatus.BAD_REQUEST, "E007", "올바르지 않은 측정 단위입니다."),
+    INTEGRITY_CONSTRAINT_VIOLATION_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "E997", "DB 무결성 제약 조건 위반입니다."),
     INVALID_INTERNAL_PARAMETER(HttpStatus.INTERNAL_SERVER_ERROR, "E998", "내부 파라미터가 잘못 전달되었습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "E999", "서버 내부 오류");
 

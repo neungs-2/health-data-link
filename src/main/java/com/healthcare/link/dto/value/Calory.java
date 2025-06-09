@@ -1,5 +1,7 @@
 package com.healthcare.link.dto.value;
 
+import com.healthcare.link.common.error.ErrorCode;
+import com.healthcare.link.common.error.exception.BadRequestException;
 import com.healthcare.link.enums.MeasurementUnit;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -12,7 +14,7 @@ public record Calory(
 ) {
     public Calory {
         if (unit != MeasurementUnit.KCAL) {
-            throw new IllegalArgumentException("단위를 kcal로 지정해주세요.");
+            throw new BadRequestException(ErrorCode.MEASUREMENT_UNIT_MISMATCH);
         }
     }
 }

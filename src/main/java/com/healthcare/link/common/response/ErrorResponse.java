@@ -1,11 +1,12 @@
-package com.healthcare.link.common.error;
+package com.healthcare.link.common.response;
 
+import com.healthcare.link.common.error.ErrorCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 개발자의 인스턴스화로 불완전한 객체 생성 방지 (of 메서드 사용)
 public class ErrorResponse {
 
     private String message;
