@@ -12,6 +12,7 @@ services:
       MYSQL_DATABASE: healthcare
       MYSQL_USER: user
       MYSQL_PASSWORD: healthcare1234
+      TZ: Asia/Seoul
     volumes:
       - ./volumes/mysql:/var/lib/mysql
     networks:
