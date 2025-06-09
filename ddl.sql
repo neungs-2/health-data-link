@@ -55,3 +55,5 @@ CREATE TABLE monthly_summary (
     PRIMARY KEY (user_id, recordkey, date),
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
+
+INSERT INTO user (name, email) values ('tester', 'tester@email.com')

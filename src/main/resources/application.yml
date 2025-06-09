@@ -6,6 +6,16 @@ spring:
     url: jdbc:mysql://localhost:3306/healthcare?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: user
     password: healthcare1234
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 3s
+      database: 0
+      lettuce:
+        pool:
+          max-wait: 3s
+
   jpa:
     show-sql: true
     hibernate:

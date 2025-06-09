@@ -18,6 +18,17 @@ services:
     networks:
       - backend
 
+  redis:
+    image: redis:7.2.5
+    container_name: healthcare-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./volumes/redis:/data
+    networks:
+      - backend
+
 networks:
   backend:
     driver: bridge
