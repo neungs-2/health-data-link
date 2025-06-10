@@ -2,13 +2,17 @@ package com.healthcare.link.common.error;
 
 import com.healthcare.link.common.error.exception.BaseException;
 import com.healthcare.link.common.response.ErrorResponse;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.Map;
 
 @Slf4j
 @ControllerAdvice
@@ -23,6 +27,12 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handle(HttpRequestMethodNotSupportedException e) {
         log.error("HttpRequestMethodNotSupportedException", e);
         return createErrorResponseEntity(ErrorCode.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<?> handleValidationException(ValidationException e) {
+        log.error("ValidationException", e);
+        return createErrorResponseEntity(ErrorCode.INVALID_PARAMETER, e.getMessage());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

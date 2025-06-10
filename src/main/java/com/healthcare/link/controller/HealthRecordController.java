@@ -2,6 +2,7 @@ package com.healthcare.link.controller;
 
 import com.healthcare.link.common.constant.DateTimeConstant;
 import com.healthcare.link.common.response.ApiResponse;
+import com.healthcare.link.common.aspect.TimezoneOffset;
 import com.healthcare.link.dto.request.StepsRecordRequestDto;
 import com.healthcare.link.dto.response.DailySummaryResponseDto;
 import com.healthcare.link.dto.response.MonthlySummaryResponseDto;
@@ -38,7 +39,7 @@ public class HealthRecordController {
             @RequestBody @Valid StepsRecordRequestDto request
     ) {
         healthRecordService.saveSteps(request, userId);
-        return ApiResponse.success(true);
+        return ApiResponse.success();
     }
 
     @GetMapping("/daily-summaries/{recordkey}")
@@ -46,7 +47,7 @@ public class HealthRecordController {
     public ApiResponse<List<DailySummaryResponseDto>> getDailySummaries(
             @RequestHeader("userId") Long userId,
             @PathVariable String recordkey,
-            @RequestParam(defaultValue = DateTimeConstant.KST_ZONE_OFFSET) String timezone
+            @TimezoneOffset @RequestParam(defaultValue = DateTimeConstant.KST_ZONE_OFFSET) String timezone
     ) {
         List<DailySummaryResponseDto> dailySummaries = healthRecordService.getDailySummaries(recordkey, timezone, userId);
         return ApiResponse.success(dailySummaries);
@@ -57,7 +58,7 @@ public class HealthRecordController {
     public ApiResponse<List<MonthlySummaryResponseDto>> getMonthlySummaries(
             @RequestHeader("userId") Long userId,
             @PathVariable String recordkey,
-            @RequestParam(defaultValue = DateTimeConstant.KST_ZONE_OFFSET) String timezone
+            @TimezoneOffset @RequestParam(defaultValue = DateTimeConstant.KST_ZONE_OFFSET) String timezone
     ) {
         List<MonthlySummaryResponseDto> monthlySummaries = healthRecordService.getMonthlySummaries(recordkey, timezone, userId);
         return ApiResponse.success(monthlySummaries);
