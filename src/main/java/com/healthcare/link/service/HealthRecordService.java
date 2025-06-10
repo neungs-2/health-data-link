@@ -89,7 +89,7 @@ public class HealthRecordService {
         monthlySummaryRepository.saveAll(monthlySummaries);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<DailySummaryResponseDto> getDailySummaries(String recordkey, String timezone, Long userId) {
         // 존재하는 유저인지 판단
         User user = userRepository.findById(userId)
@@ -113,7 +113,7 @@ public class HealthRecordService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<MonthlySummaryResponseDto> getMonthlySummaries(String recordkey, String timezone, Long userId) {
         // 존재하는 유저인지 판단
         User user = userRepository.findById(userId)
@@ -206,9 +206,9 @@ public class HealthRecordService {
             String recordkey,
             String timezoneOffset
     ) {
-        // 월별 MonthlySummary 생성
         List<MonthlySummary> summaryList = new ArrayList<>();
 
+        // 월별 MonthlySummary 생성
         for (List<StepsEntryValueDto> monthlyEntries : monthlyGroups.values()) {
             // 동일 월 검증 (period.from 기준)
             YearMonth baseMonth = YearMonth.from(monthlyEntries.get(0).periodFrom());

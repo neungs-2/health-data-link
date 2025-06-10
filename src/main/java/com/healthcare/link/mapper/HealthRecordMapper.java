@@ -46,8 +46,8 @@ public class HealthRecordMapper {
     public StepsEntryValueDto toStepsEntryValueDto(StepsEntryDto stepsEntryDto) {
         return new StepsEntryValueDto(
                 stepsEntryDto.steps(),
-                stepsEntryDto.calories().value(),
                 stepsEntryDto.distance().value(),
+                stepsEntryDto.calories().value(),
                 stepsEntryDto.period().from()
         );
     }
