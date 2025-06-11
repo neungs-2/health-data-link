@@ -3,6 +3,7 @@ package com.healthcare.link.service.cache;
 import com.healthcare.link.common.redis.RedisHandler;
 import com.healthcare.link.dto.cache.DailySummaryResponseListCacheDto;
 import com.healthcare.link.dto.cache.MonthlySummaryResponseListCacheDto;
+import com.healthcare.link.dto.request.StepsRecordRequestDto;
 import com.healthcare.link.dto.response.DailySummaryResponseDto;
 import com.healthcare.link.dto.response.MonthlySummaryResponseDto;
 import com.healthcare.link.service.HealthRecordService;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class HealthRecordCacheService {
     private final RedisHandler<DailySummaryResponseListCacheDto> dailySummaryRedisHandler;
     private final RedisHandler<MonthlySummaryResponseListCacheDto> monthlySummaryRedisHandler;
+    private final RedisHandler<String> stringRedisHandler;
     private final HealthRecordService healthRecordService;
 
     public List<DailySummaryResponseDto> getDailySummariesWithCache(String recordkey, String timezone, Long userId) {
@@ -26,7 +28,7 @@ public class HealthRecordCacheService {
         // Redis 조회
         Optional<DailySummaryResponseListCacheDto> cacheResult = dailySummaryRedisHandler.get(key);
 
-        // 캐시 히트 -> 리턴
+        // 캐시 히트 -> ttl 리셋, 리턴
         if (cacheResult.isPresent()) {
             dailySummaryRedisHandler.expire(key, Duration.ofMinutes(5));
             return cacheResult.get().item();
@@ -35,7 +37,8 @@ public class HealthRecordCacheService {
         // 캐시 미스 -> DB 조회
         List<DailySummaryResponseDto> dbResult = healthRecordService.getDailySummaries(recordkey,timezone, userId);
 
-        // Redis 저장; 캐싱 실패 시 그냥 응답
+        // Redis 저장
+        // 캐시 저장 실패 시 그냥 응답
         try {
             DailySummaryResponseListCacheDto cacheDto = new DailySummaryResponseListCacheDto(dbResult);
             dailySummaryRedisHandler.set(key, cacheDto, Duration.ofMinutes(5));
@@ -50,7 +53,7 @@ public class HealthRecordCacheService {
         // Redis 조회
         Optional<MonthlySummaryResponseListCacheDto> cacheResult = monthlySummaryRedisHandler.get(key);
 
-        // 캐시 히트 -> 리턴
+        // 캐시 히트 -> ttl 리셋, 리턴
         if (cacheResult.isPresent()) {
             monthlySummaryRedisHandler.expire(key, Duration.ofMinutes(5));
             return cacheResult.get().item();
@@ -59,13 +62,29 @@ public class HealthRecordCacheService {
         // 캐시 미스 -> DB 조회
         List<MonthlySummaryResponseDto> dbResult = healthRecordService.getMonthlySummaries(recordkey,timezone, userId);
 
-        // Redis 저장; 캐싱 실패 시 그냥 응답
+        // Redis 저장
+        // 캐시 저장 실패 시 그냥 응답
         try {
             MonthlySummaryResponseListCacheDto cacheDto = new MonthlySummaryResponseListCacheDto(dbResult);
             monthlySummaryRedisHandler.set(key, cacheDto, Duration.ofMinutes(5));
         } catch (Exception ignore) {}
 
         return dbResult;
+    }
+
+    public void saveStepsWithIdempotentCheck(StepsRecordRequestDto request, Long userId) {
+        String key = getIdempotentKey(request.recordkey(), userId);
+        Optional<String> idempotentKey = stringRedisHandler.get(key);
+
+        // 멱등성 키 없는 경우 키 등록 및 데이터 조회
+        if (idempotentKey.isEmpty()) {
+            try {
+                // 레디스 장애 시 연동 불가한 상황이 저장 시 멱등키 없는 상황보다 치명적이라고 생각하여 트랜잭션과 분리
+                stringRedisHandler.set(key, "LOCKED", Duration.ofMinutes(5));
+            } catch (Exception ignore) {}
+
+            healthRecordService.saveSteps(request, userId);
+        }
     }
 
     private String getDailyCacheKey(String recordkey, String timezone, Long userId) {
@@ -87,6 +106,15 @@ public class HealthRecordCacheService {
                 .append(userId)
                 .append(":")
                 .append(timezone)
+                .toString();
+    }
+
+    private String getIdempotentKey(String recordkey, Long userId) {
+        StringBuilder sb = new StringBuilder();
+        return sb.append("idempotent:")
+                .append(recordkey)
+                .append(":")
+                .append(userId)
                 .toString();
     }
 }

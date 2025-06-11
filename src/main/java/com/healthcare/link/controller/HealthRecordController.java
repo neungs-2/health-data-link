@@ -40,7 +40,8 @@ public class HealthRecordController {
             @RequestHeader("userId") Long userId,
             @RequestBody @Valid StepsRecordRequestDto request
     ) {
-        healthRecordService.saveSteps(request, userId);
+        // 외부 시스템 데이터 연동 -> Retry 방지를 위해 멱등성 키 적용
+        healthRecordCacheService.saveStepsWithIdempotentCheck(request, userId);
         return ApiResponse.success();
     }
 

@@ -14,7 +14,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -67,6 +66,15 @@ public class RedisConfiguration {
     }
 
     @Bean
+    public RedisTemplate<String, String> customStringRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, String> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        return template;
+    }
+
+    @Bean
     public RedisHandler<DailySummaryResponseListCacheDto> dailySummaryRedisHandler(RedisTemplate<String, DailySummaryResponseListCacheDto> dailySummaryRedisTemplate) {
         return new RedisHandler<>(dailySummaryRedisTemplate);
     }
@@ -74,5 +82,10 @@ public class RedisConfiguration {
     @Bean
     public RedisHandler<MonthlySummaryResponseListCacheDto> monthlySummaryRedisHandler(RedisTemplate<String, MonthlySummaryResponseListCacheDto> monthlySummaryRedisTemplate) {
         return new RedisHandler<>(monthlySummaryRedisTemplate);
+    }
+
+    @Bean
+    public RedisHandler<String> stringRedisHandler(RedisTemplate<String, String> customStringRedisTemplate) {
+        return new RedisHandler<>(customStringRedisTemplate);
     }
 }
