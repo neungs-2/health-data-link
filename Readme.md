@@ -2,7 +2,7 @@
 
 ![ERD 이미지](https://github.com/user-attachments/assets/6a893ca1-d479-4beb-a4a9-39c2f2b97d6b)
 
-### Table List
+### 1.1 Table List
 * **steps_record**
   * 개별 data entry 정보
   * PK : step_record_id (auto increment)
@@ -42,7 +42,7 @@
 
   <br>
 
-### 설계 포인트
+### 1.2 설계 포인트
 
 * User 삭제 시 Cascade가 가능하도록 FK 설계
 * 식별 가능한 필드 조합이 3개가 넘어가는 경우 별도의 PK를 설정
@@ -53,7 +53,7 @@
 
   <br>
 
-### DDL
+### 1.3 DDL
 ```mysql
 CREATE TABLE user (
     user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -121,9 +121,9 @@ INSERT INTO user (name, email) values ('tester', 'tester@email.com')
 <br>
 
 ---
-## Application 코드 핵심 사항 (샘플 코드 코멘트)
+## 2. Application 코드 핵심 사항 (샘플 코드 코멘트)
 
-### API Spec
+### 2.1 API Spec
 #### 걸음 수 데이터 저장
 - **URL**: POST /api/health-records/steps
 - **Headers**:
@@ -203,7 +203,7 @@ INSERT INTO user (name, email) values ('tester', 'tester@email.com')
 
   <br>
 
-### 계층 구조
+### 2.2 계층 구조
 
 ```
 .
@@ -291,9 +291,9 @@ INSERT INTO user (name, email) values ('tester', 'tester@email.com')
 ```
 
 #### Controller Layer
-- Swagger API 문서화 (`@Tag`, `@Operation`)
+- Swagger API 문서화 
+- 요청 유효성 검증
 - 공통 응답 형식 사용 (`ApiResponse<T>`)
-- 요청 유효성 검증 (`@Valid`, `@Validated`)
 
 #### Service Layer
 - 비즈니스 로직 및 트랜잭션과 캐싱 로직 분리
@@ -311,24 +311,24 @@ INSERT INTO user (name, email) values ('tester', 'tester@email.com')
 
   <br>
 
-### Redis 사용 전략
+### 2.3 Redis 사용 전략
 #### 캐싱
 - 일별/월별 집계 데이터 캐시
   - Key 구조: `cache:[daily/monthly]:{recordkey}:{userId}:{timezone}`
   - Value: 집계된 통계 데이터 (JSON)
-- 캐시 갱신 전략
-  - 새로운 데이터 입력 시 관련 캐시 무효화
+  - TTL 설정으로 자동 만료 관리
+  - 캐시 히트 시 TTL 리셋
+  - `recordkey` 기준이므로 동일 유저 Step Record 추가시에도 캐시 무효화 불필요
 
 #### 멱등성 키
-- 구조: `idempotent:{recordkey}:{userId}`
+- key 구조: `idempotent:{recordkey}:{userId}`
 - TTL 적용으로 자동 만료 관리
 - 중복 요청 체크 방식
   - 키 존재 여부로 중복 판단
-  - 원자적 작업으로 Race Condition 방지
 
   <br>
 
-### 엔티티
+### 2.4 엔티티
 - 핵심 엔티티
   - StepsRecord: 원본 데이터 저장
   - DailySummary: 일별 집계 데이터
@@ -338,7 +338,7 @@ INSERT INTO user (name, email) values ('tester', 'tester@email.com')
 
   <br>
 
-### Validation & Deserialization
+### 2.5 Validation & Deserialization
 - API 요청 검증
   - `@TimezoneOffset`: 커스텀 타임존 포맷 검증
   - DTO 필드 유효성 검증 (`@Valid`)
