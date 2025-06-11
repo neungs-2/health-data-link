@@ -5,7 +5,7 @@ import com.healthcare.link.common.deserializer.StepsDeserializer;
 import com.healthcare.link.common.deserializer.ZonedDateTimeDeserializer;
 import com.healthcare.link.dto.value.Calory;
 import com.healthcare.link.dto.value.Distance;
-import com.healthcare.link.enums.HealthRecordType;
+import com.healthcare.link.common.enums.HealthRecordType;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;

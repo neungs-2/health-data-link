@@ -7,6 +7,7 @@ import com.healthcare.link.dto.request.StepsRecordRequestDto;
 import com.healthcare.link.dto.response.DailySummaryResponseDto;
 import com.healthcare.link.dto.response.MonthlySummaryResponseDto;
 import com.healthcare.link.service.HealthRecordService;
+import com.healthcare.link.service.cache.HealthRecordCacheService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,6 +32,7 @@ import java.util.List;
 public class HealthRecordController {
 
     private final HealthRecordService healthRecordService;
+    private final HealthRecordCacheService healthRecordCacheService;
 
     @PostMapping("/steps")
     @Operation(summary = "걸음 수 저장", description = "걸음 수 데이터를 저장합니다.")
@@ -49,7 +51,7 @@ public class HealthRecordController {
             @PathVariable String recordkey,
             @TimezoneOffset @RequestParam(defaultValue = DateTimeConstant.KST_ZONE_OFFSET) String timezone
     ) {
-        List<DailySummaryResponseDto> dailySummaries = healthRecordService.getDailySummaries(recordkey, timezone, userId);
+        List<DailySummaryResponseDto> dailySummaries = healthRecordCacheService.getDailySummariesWithCache(recordkey, timezone, userId);
         return ApiResponse.success(dailySummaries);
     }
 
@@ -60,7 +62,7 @@ public class HealthRecordController {
             @PathVariable String recordkey,
             @TimezoneOffset @RequestParam(defaultValue = DateTimeConstant.KST_ZONE_OFFSET) String timezone
     ) {
-        List<MonthlySummaryResponseDto> monthlySummaries = healthRecordService.getMonthlySummaries(recordkey, timezone, userId);
+        List<MonthlySummaryResponseDto> monthlySummaries = healthRecordCacheService.getMonthlySummariesWithCache(recordkey, timezone, userId);
         return ApiResponse.success(monthlySummaries);
     }
 }

@@ -1,4 +1,4 @@
-package com.healthcare.link.dto.param;
+package com.healthcare.link.dto;
 
 import java.time.ZonedDateTime;
 

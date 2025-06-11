@@ -1,4 +1,4 @@
-package com.healthcare.link.enums;
+package com.healthcare.link.common.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

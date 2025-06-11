@@ -39,6 +39,7 @@ CREATE TABLE daily_summary (
     steps INT,
     calories DOUBLE,
     distance DOUBLE,
+    timezone char(6),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, recordkey, date),
     FOREIGN KEY (user_id) REFERENCES user(user_id)
@@ -51,6 +52,7 @@ CREATE TABLE monthly_summary (
     steps INT,
     calories DOUBLE,
     distance DOUBLE,
+    timezone char(6),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, recordkey, date),
     FOREIGN KEY (user_id) REFERENCES user(user_id)

@@ -1,4 +1,4 @@
-package com.healthcare.link.dto.param;
+package com.healthcare.link.dto;
 
 public record StepsEntrySumDto(
         Integer totalSteps,
