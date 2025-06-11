@@ -6,8 +6,8 @@ CREATE TABLE user (
 );
 
 CREATE TABLE source (
-    recordkey CHAR(36),
-    user_id BIGINT,
+recordkey CHAR(36) NOT NULL,
+    user_id BIGINT NOT NULL,
     name VARCHAR(100),
     product_name VARCHAR(100),
     product_vender VARCHAR(100),
@@ -33,22 +33,22 @@ CREATE TABLE steps_record (
 );
 
 CREATE TABLE daily_summary (
-    user_id BIGINT,
-    recordkey CHAR(36),
-    date DATE,
+    user_id BIGINT NOT NULL,
+    recordkey CHAR(36) NOT NULL,
+    date DATE NOT NULL,
     steps INT,
     calories DECIMAL(20, 10),
     distance DECIMAL(20, 10),
-    timezone char(6),
+    timezone CHAR(6),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, recordkey, date),
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
 CREATE TABLE monthly_summary (
-    user_id BIGINT,
-    recordkey CHAR(36),
-    date CHAR(7),
+    user_id BIGINT NOT NULL,
+    recordkey CHAR(36) NOT NULL,
+    date CHAR(7) NOT NULL,
     steps INT,
     calories DECIMAL(20, 10),
     distance DECIMAL(20, 10),
