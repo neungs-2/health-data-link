@@ -1,14 +1,16 @@
 package com.healthcare.link.common.aspect;
 
+import com.healthcare.link.common.constant.DateTimeConstant;
 import com.healthcare.link.common.error.ErrorCode;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
+import java.time.ZoneOffset;
 import java.util.regex.Pattern;
 
 public class TimezoneOffsetValidator implements ConstraintValidator<TimezoneOffset, String> {
 
-    private static final Pattern TIMEZONE_OFFSET_PATTERN = Pattern.compile("^[+-]\\d{2}:\\d{2}$");
+    private static final Pattern TIMEZONE_OFFSET_PATTERN = Pattern.compile(DateTimeConstant.ISO_8601_TIMEZONE_REGEX);
 
     @Override
     public void initialize(TimezoneOffset constraintAnnotation) {
@@ -30,13 +32,11 @@ public class TimezoneOffsetValidator implements ConstraintValidator<TimezoneOffs
         }
 
         try {
-            String[] parts = value.substring(1).split(":");
-            int hours = Integer.parseInt(parts[0]);
-            int minutes = Integer.parseInt(parts[1]);
-
-            return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
+            ZoneOffset.of(value);
         } catch (Exception e) {
             return false;
         }
+
+        return true;
     }
 }

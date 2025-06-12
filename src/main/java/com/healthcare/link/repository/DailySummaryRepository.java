@@ -12,7 +12,4 @@ import java.util.Optional;
 public interface DailySummaryRepository extends JpaRepository<DailySummary, DailySummaryId> {
 
     List<DailySummary> findByIdRecordkeyAndIdUserId(String recordkey, Long userId);
-
-    @Query("SELECT d FROM DailySummary d WHERE d.id.userId = :userId AND d.id.recordkey = :recordkey AND d.id.date = CURRENT_DATE")
-    Optional<DailySummary> findTodaySummary(@Param("userId") Long userId, @Param("recordkey") String recordkey);
 }

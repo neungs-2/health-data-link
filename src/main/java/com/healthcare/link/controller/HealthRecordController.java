@@ -6,7 +6,6 @@ import com.healthcare.link.common.aspect.TimezoneOffset;
 import com.healthcare.link.dto.request.StepsRecordRequestDto;
 import com.healthcare.link.dto.response.DailySummaryResponseDto;
 import com.healthcare.link.dto.response.MonthlySummaryResponseDto;
-import com.healthcare.link.service.HealthRecordService;
 import com.healthcare.link.service.cache.HealthRecordCacheService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +30,6 @@ import java.util.List;
 @RestController
 public class HealthRecordController {
 
-    private final HealthRecordService healthRecordService;
     private final HealthRecordCacheService healthRecordCacheService;
 
     @PostMapping("/steps")

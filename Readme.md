@@ -1,3 +1,20 @@
+# KB 헬스케어 과제 전형
+
+## 0. 코드 실행
+1. Repository Clone
+```shell
+git clone https://github.com/neungs-2/health-data-link.git
+```
+2. Docker 실행 (Docker Compose)
+```shell
+cd ./health-data-link
+docker-compose up -d
+```
+3. Application code 실행
+
+<br>
+
+---
 ## 1. 데이터베이스 설계 ERD
 
 ![ERD 이미지](https://github.com/user-attachments/assets/6a893ca1-d479-4beb-a4a9-39c2f2b97d6b)

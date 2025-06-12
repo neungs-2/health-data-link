@@ -3,12 +3,14 @@ package com.healthcare.link.common.constant;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE) // 인스턴스화 방지
 public final class DateTimeConstant {
     public static final String KST_ZONE_OFFSET = "+09:00";
+    public static final String ISO_8601_TIMEZONE_REGEX = "^[+-]\\d{2}:\\d{2}$";
 
     public static final String DATETIME_PATTERN_WITH_ZONE = "yyyy-MM-dd'T'HH:mm:ssZ";
     public static final String DATETIME_PATTERN_WITH_SPACE_ZONE = "yyyy-MM-dd HH:mm:ss Z";
