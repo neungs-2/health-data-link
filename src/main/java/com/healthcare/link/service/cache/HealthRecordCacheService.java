@@ -74,15 +74,10 @@ public class HealthRecordCacheService {
 
     public void saveStepsWithIdempotentCheck(StepsRecordRequestDto request, Long userId) {
         String key = getIdempotentKey(request.recordkey(), userId);
-        Optional<String> idempotentKey = stringRedisHandler.get(key);
+        boolean hasNotIdempotentKey = stringRedisHandler.setNx(key, "LOCKED", Duration.ofMinutes(5));
 
-        // 멱등성 키 없는 경우 키 등록 및 데이터 조회
-        if (idempotentKey.isEmpty()) {
-            try {
-                // 레디스 장애 시 연동 불가한 상황이 저장 시 멱등키 없는 상황보다 치명적이라고 생각하여 트랜잭션과 분리
-                stringRedisHandler.set(key, "LOCKED", Duration.ofMinutes(5));
-            } catch (Exception ignore) {}
-
+        // 멱등성 키 없는 경우 (키 저장 성공) Steps 데이터 저장
+        if (hasNotIdempotentKey) {
             healthRecordService.saveSteps(request, userId);
         }
     }
